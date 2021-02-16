@@ -9,7 +9,7 @@ import os
 
 # в текущей дирректории создать каталог for_pdf.csv
 
-im = Image.open('1661_0.jpg')
+im = Image.open('1661.jpg')
 # Изображение для водяного знака
 img = ''
 

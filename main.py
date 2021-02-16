@@ -4,10 +4,17 @@ import os
 import requests
 import shutil
 
+proc = int(input("Введите размер от искомого:"))
+name_output_catalog = str(input("Введите имя каталога:"))
 
 def get_file(url):
     r = requests.get(url, stream=True)
     return r
+
+# def resize(open_file_obj, proc):
+#     height, width = open_file_obj.size
+#     size = height / 100 * proc, width / 100 * proc
+#     open_file_obj.thumbnail(size)
 
 
 def save_image(name, file_object):
@@ -57,8 +64,8 @@ def main():
                     if 'ткань' in row['SKU']:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
-                        im.save(path + '/' + str(count) + '.png')
-                        list_png.append(path + '/' + str(count) + '.png')
+                        im.save(path + '/' + str(count) + '1.jpg')
+                        list_png.append(path + '/' + str(count) + '1.jpg')
                         continue
                     else:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
@@ -104,14 +111,14 @@ def main():
                             (character),
                             font=font,
                             fill='#1C0606')
-                        im.save(path + '/' + str(count) + '.png')
-                        list_png.append(path + '/' + str(count) + '.png')
-        pdf1_filename = path_o + '/' + "catalog3.pdf"
+                        im.save(path + '/' + str(count) + '1.jpg')
+                        list_png.append(path + '/' + str(count) + '1.jpg')
+        pdf1_filename = path_o + '/' + f"{name_output_catalog}.pdf"
         im_list_obj = []
         for i in list_png:
             im_list_obj.append(Image.open(i))
         imk = im_list_obj.pop(0)
-        imk.save(pdf1_filename, "PDF", resolution=100.0, save_all=True, append_images=im_list_obj)
+        imk.save(pdf1_filename, "PDF", quality=proc, save_all=True, append_images=im_list_obj)
 
         path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'folder')
         shutil.rmtree(path)

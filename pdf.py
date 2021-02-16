@@ -4,7 +4,7 @@ import PIL.Image
 def img2pdf(fname):
     filename = fname
     name = filename.split('.')[0]
-    im = PIL.Image.open('1661_0.jpg')
+    im = PIL.Image.open('1661.jpg')
     if not os.path.exists('im2pdf_output'):
         os.makedirs('im2pdf_output')
     newfilename = ''.join([name, '.pdf'])
@@ -13,6 +13,6 @@ def img2pdf(fname):
 
 #files = [f for f in os.listdir('./') if f.endswith('.jpg')]
 #for fname in files:
-img2pdf('1661_0.jpg')
+img2pdf('1661.jpg')
 
 
