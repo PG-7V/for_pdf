@@ -4,8 +4,28 @@ import os
 import requests
 import shutil
 
+
+def create_boll(string):
+    if "да" in string:
+        string = True
+    elif "нет" in string:
+        string = False
+    return string
+
 proc = int(input("Введите размер от искомого:"))
 name_output_catalog = str(input("Введите имя каталога:"))
+
+if_descr = str(input("Размеры печатать? Да/Нет:")).lower()
+create_boll(if_descr)
+descr_resize = 0
+if_descr_resize = str(input("Размеры изменять? Да/Нет:")).lower()
+create_boll(if_descr_resize)
+if if_descr_resize:
+    descr_resize = int(input("Введите число изменения размеров:"))
+
+if_create_logo = str(input("Печатать логотип? Да/Нет:")).lower()
+create_boll(if_create_logo)
+
 
 def get_file(url):
     r = requests.get(url, stream=True)
@@ -70,24 +90,28 @@ def main():
                     else:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
+                        draw_text = ImageDraw.Draw(im)
+                        font = ImageFont.truetype('Roboto-Light.ttf', size=30)
 
-                        if sale or new:
+                        if (sale or new) and if_create_logo:
                             if sale:
-                                logo = 'sale.png'
+                                draw_text.ellipse((25, 25, 130, 130), fill="red", outline="red")
+                                draw_text.text((42, 62), 'SALE', font=font, fill='white')
+
                             elif new:
-                                logo = 'new.png'
-                            watermark = Image.open(logo)
-                            im.paste(watermark, (25, 25), watermark)
+                                draw_text.ellipse((25, 25, 130, 130), fill="green", outline="green")
+                                draw_text.text((45, 62), 'NEW', font=font, fill='white')
+
+
 
                         font = ImageFont.truetype('Roboto-Light.ttf', size=24)
-                        draw_text = ImageDraw.Draw(im)
                         draw_text.text(
                             (700, 25),
                             'В наличии',
                             font=font,
                             fill='#2a9926')
                         if 'Артикул' in row['Title']:
-                            art = ('Артикул' + row['SKU'])
+                            art = ('Артикул: ' + row['SKU'])
                         else:
                             art = (row['SKU'])
 
@@ -96,11 +120,16 @@ def main():
                             (art),
                             font=font,
                             fill='#1C0606')
-                        draw_text.text(
-                            (700, 90),
-                            (descr),
-                            font=font,
-                            fill='#1C0606')
+                        if if_descr:
+                            if if_descr_resize:
+                                descr1 = descr.split(" ")
+                                descr2 = descr1[1].split("-")
+                                descr = f"{descr1[0]} {int(descr2[0]) + descr_resize}-{int(descr2[1]) + descr_resize}"
+                                draw_text.text(
+                                    (700, 90),
+                                    (descr),
+                                    font=font,
+                                    fill='#1C0606')
                         draw_text.text(
                             (700, 900),
                             'Состав:',
