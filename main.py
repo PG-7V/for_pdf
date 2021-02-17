@@ -5,7 +5,7 @@ import requests
 import shutil
 
 
-def create_boll(string):
+def create_bool(string):
     if "да" in string:
         string = True
     elif "нет" in string:
@@ -14,17 +14,15 @@ def create_boll(string):
 
 proc = int(input("Введите размер от искомого:"))
 name_output_catalog = str(input("Введите имя каталога:"))
-
-if_descr = str(input("Размеры печатать? Да/Нет:")).lower()
-create_boll(if_descr)
+if_material = create_bool(str(input("Ткань отображать? Да/Нет:")).lower())
+if_descr = create_bool(str(input("Размеры отображать? Да/Нет:")).lower())
 descr_resize = 0
-if_descr_resize = str(input("Размеры изменять? Да/Нет:")).lower()
-create_boll(if_descr_resize)
-if if_descr_resize:
-    descr_resize = int(input("Введите число изменения размеров:"))
+if if_descr:
+    if_descr_resize = create_bool(str(input("Размеры изменять? Да/Нет:")).lower())
+    if if_descr_resize:
+        descr_resize = int(input("Введите число изменения размеров:"))
 
-if_create_logo = str(input("Печатать логотип? Да/Нет:")).lower()
-create_boll(if_create_logo)
+if_create_logo = create_bool(str(input("Печатать логотип? Да/Нет:")).lower())
 
 
 def get_file(url):
@@ -81,11 +79,12 @@ def main():
             if not row['Description']:
 
                 if row['SKU']:
-                    if 'ткань' in row['SKU']:
+                    if 'т' in row['SKU']:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
                         im.save(path + '/' + str(count) + '1.jpg')
-                        list_png.append(path + '/' + str(count) + '1.jpg')
+                        if if_material:
+                            list_png.append(path + '/' + str(count) + '1.jpg')
                         continue
                     else:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
