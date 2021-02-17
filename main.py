@@ -12,9 +12,15 @@ def create_bool(string):
         string = False
     return string
 
+
+collection = ""
 proc = int(input("Введите размер от искомого:"))
 name_output_catalog = str(input("Введите имя каталога:"))
+if_quantity = create_bool(str(input("Отобразить по наличию? Да/Нет:")))
 if_material = create_bool(str(input("Ткань отображать? Да/Нет:")).lower())
+if_collection = create_bool(str(input("Отображать поры года?Да/Нет")))
+if if_collection:
+    collection = str(input("Введите сезоны для отображения:"))
 if_characteristics = create_bool(str(input("Отображать состав? Да/Нет:")))
 if_descr = create_bool(str(input("Размеры отображать? Да/Нет:")).lower())
 descr_resize = 0
@@ -33,11 +39,6 @@ if_create_logo = create_bool(str(input("Печатать логотип? Да/Н
 def get_file(url):
     r = requests.get(url, stream=True)
     return r
-
-# def resize(open_file_obj, proc):
-#     height, width = open_file_obj.size
-#     size = height / 100 * proc, width / 100 * proc
-#     open_file_obj.thumbnail(size)
 
 
 def save_image(name, file_object):
@@ -61,6 +62,7 @@ def main():
         reader = csv.DictReader(f, delimiter=";", fieldnames=fieldnames)
         sale = 0
         new = 0
+        category = 0
         count = 0
         character = ''
         descr = ''
@@ -69,8 +71,11 @@ def main():
             if 'Размеры' in row['Description']:
                 sale = 0
                 new = 0
+                category = 0
                 character = ''
                 descr = row['Description']
+                if row["Category"].strip() in collection:
+                    category = 1
                 if 'Sale' in row['Mark']:
                     sale = 1
                 elif 'New' in row['Mark']:
@@ -89,9 +94,23 @@ def main():
                         im = Image.open(path + '/' + str(count) + '.jpg')
                         im.save(path + '/' + str(count) + '1.jpg')
                         if if_material:
-                            list_png.append(path + '/' + str(count) + '1.jpg')
+                            if if_collection:
+                                if category:
+                                    if if_quantity:
+                                        if quantity:
+                                            list_png.append(path + '/' + str(count) + '1.jpg')
+                                    else:
+                                        list_png.append(path + '/' + str(count) + '1.jpg')
+                            else:
+                                if if_quantity:
+                                    if quantity:
+                                        list_png.append(path + '/' + str(count) + '1.jpg')
+
+                                else:
+                                    list_png.append(path + '/' + str(count) + '1.jpg')
                         continue
                     else:
+                        quantity = 0
                         if row['Price']:
                             price = int(row['Price'].split(".")[0])
                         if row["Quantity"]:
@@ -120,7 +139,7 @@ def main():
                                 'В наличии',
                                 font=font,
                                 fill='#2a9926')
-                            quantity = 0
+                            # quantity = 0
                         if 'Артикул' in row['Title']:
                             art = ('Артикул: ' + row['SKU'])
                         else:
@@ -167,7 +186,21 @@ def main():
                                 font=font,
                                 fill='#1C0606')
                         im.save(path + '/' + str(count) + '1.jpg')
-                        list_png.append(path + '/' + str(count) + '1.jpg')
+                        if if_collection:
+                            if category:
+                                if if_quantity:
+                                    if quantity:
+                                        list_png.append(path + '/' + str(count) + '1.jpg')
+                                else:
+                                    list_png.append(path + '/' + str(count) + '1.jpg')
+                        else:
+                            if if_quantity:
+                                if quantity:
+                                    list_png.append(path + '/' + str(count) + '1.jpg')
+
+                            else:
+                                list_png.append(path + '/' + str(count) + '1.jpg')
+
         pdf1_filename = path_o + '/' + f"{name_output_catalog}.pdf"
         im_list_obj = []
         for i in list_png:
