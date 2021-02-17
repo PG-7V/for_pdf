@@ -15,14 +15,24 @@
 # #for fname in files:
 # img2pdf('1661.jpg')
 #
-#
 
 
-x = 1
-y = 1
-z = 0
-if z and x or y:
-    print(bool(x) + bool(y) + bool(z))
+from PIL import Image, ImageDraw, ImageFont
 
-print("-------")
-print(bool(x) + bool(y) + bool(z))
+img = Image.open('1661.jpg')
+font = ImageFont.truetype('Roboto-Light.ttf', size=24)
+draw_text = ImageDraw.Draw(img)
+draw_text.text(
+    (700, 90),
+    'В наличии',
+    # Добавляем шрифт к изображению
+    font=font,
+    fill='#2a9926')
+draw_text.text(
+    (700, 120),
+    'В наличии 2',
+    # Добавляем шрифт к изображению
+    font=font,
+    fill='#2a9926')
+
+img.show()

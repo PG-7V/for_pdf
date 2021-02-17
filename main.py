@@ -17,11 +17,15 @@ name_output_catalog = str(input("Введите имя каталога:"))
 if_material = create_bool(str(input("Ткань отображать? Да/Нет:")).lower())
 if_descr = create_bool(str(input("Размеры отображать? Да/Нет:")).lower())
 descr_resize = 0
+if_price_resize = 1
 if if_descr:
     if_descr_resize = create_bool(str(input("Размеры изменять? Да/Нет:")).lower())
     if if_descr_resize:
         descr_resize = int(input("Введите число изменения размеров:"))
-
+if_price = create_bool(str(input("Отображать цену в каталоге? Да/Нет:")).lower())
+if if_price:
+    valute = str(input("Введите валюту (BY, RUR, EUR, USD:"))
+    if_price_resize = int(input("Введите коэфициент:"))
 if_create_logo = create_bool(str(input("Печатать логотип? Да/Нет:")).lower())
 
 
@@ -87,6 +91,8 @@ def main():
                             list_png.append(path + '/' + str(count) + '1.jpg')
                         continue
                     else:
+                        if row['Price']:
+                            price = int(row['Price'].split(".")[0])
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
                         draw_text = ImageDraw.Draw(im)
@@ -124,11 +130,25 @@ def main():
                                 descr1 = descr.split(" ")
                                 descr2 = descr1[1].split("-")
                                 descr = f"{descr1[0]} {int(descr2[0]) + descr_resize}-{int(descr2[1]) + descr_resize}"
+                            draw_text.text(
+                                (700, 90),
+                                (descr),
+                                font=font,
+                                fill='#1C0606')
+                            if if_price:
+                                price = f"{price} * {if_price_resize} {valute}"
                                 draw_text.text(
-                                    (700, 90),
-                                    (descr),
+                                    (700, 120),
+                                    (price),
                                     font=font,
                                     fill='#1C0606')
+                        elif if_price:
+                            price = price*if_price_resize/100 + valute
+                            draw_text.text(
+                                (700, 90),
+                                (price),
+                                font=font,
+                                fill='#1C0606')
                         draw_text.text(
                             (700, 900),
                             'Состав:',
