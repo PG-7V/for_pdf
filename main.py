@@ -15,9 +15,10 @@ def create_bool(string):
 proc = int(input("Введите размер от искомого:"))
 name_output_catalog = str(input("Введите имя каталога:"))
 if_material = create_bool(str(input("Ткань отображать? Да/Нет:")).lower())
+if_characteristics = create_bool(str(input("Отображать состав? Да/Нет:")))
 if_descr = create_bool(str(input("Размеры отображать? Да/Нет:")).lower())
 descr_resize = 0
-if_price_resize = 1
+if_price_resize = 100
 if if_descr:
     if_descr_resize = create_bool(str(input("Размеры изменять? Да/Нет:")).lower())
     if if_descr_resize:
@@ -93,6 +94,8 @@ def main():
                     else:
                         if row['Price']:
                             price = int(row['Price'].split(".")[0])
+                        if row["Quantity"]:
+                            quantity = int(row["Quantity"])
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
                         draw_text = ImageDraw.Draw(im)
@@ -110,11 +113,13 @@ def main():
 
 
                         font = ImageFont.truetype('Roboto-Light.ttf', size=24)
-                        draw_text.text(
-                            (700, 25),
-                            'В наличии',
-                            font=font,
-                            fill='#2a9926')
+                        if quantity:
+                            draw_text.text(
+                                (700, 25),
+                                'В наличии',
+                                font=font,
+                                fill='#2a9926')
+                            quantity = 0
                         if 'Артикул' in row['Title']:
                             art = ('Артикул: ' + row['SKU'])
                         else:
@@ -136,29 +141,30 @@ def main():
                                 font=font,
                                 fill='#1C0606')
                             if if_price:
-                                price = f"{price} * {if_price_resize} {valute}"
+                                price = str(price * if_price_resize / 100) + " " + valute
                                 draw_text.text(
                                     (700, 120),
                                     (price),
                                     font=font,
                                     fill='#1C0606')
                         elif if_price:
-                            price = price*if_price_resize/100 + valute
+                            price = str(price * if_price_resize/100) + " " + valute
                             draw_text.text(
                                 (700, 90),
                                 (price),
                                 font=font,
                                 fill='#1C0606')
-                        draw_text.text(
-                            (700, 900),
-                            'Состав:',
-                            font=font,
-                            fill='#2a9926')
-                        draw_text.text(
-                            (700, 925),
-                            (character),
-                            font=font,
-                            fill='#1C0606')
+                        if if_characteristics:
+                            draw_text.text(
+                                (700, 900),
+                                'Состав:',
+                                font=font,
+                                fill='#2a9926')
+                            draw_text.text(
+                                (700, 925),
+                                (character),
+                                font=font,
+                                fill='#1C0606')
                         im.save(path + '/' + str(count) + '1.jpg')
                         list_png.append(path + '/' + str(count) + '1.jpg')
         pdf1_filename = path_o + '/' + f"{name_output_catalog}.pdf"
