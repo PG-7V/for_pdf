@@ -101,6 +101,7 @@ def main():
                         draw_text = ImageDraw.Draw(im)
                         font = ImageFont.truetype('Roboto-Light.ttf', size=30)
 
+
                         if (sale or new) and if_create_logo:
                             if sale:
                                 draw_text.ellipse((25, 25, 130, 130), fill="red", outline="red")
