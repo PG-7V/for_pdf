@@ -46,6 +46,7 @@ def save_image(name, file_object):
         for chunk in file_object.iter_content(8192):
             fo.write(chunk)
 
+
             
 def main():
     list_png = []
@@ -131,7 +132,6 @@ def main():
                                 draw_text.text((45, 62), 'NEW', font=font, fill='white')
 
 
-
                         font = ImageFont.truetype('Roboto-Light.ttf', size=24)
                         if quantity:
                             draw_text.text(
@@ -144,7 +144,6 @@ def main():
                             art = ('Артикул: ' + row['SKU'])
                         else:
                             art = (row['SKU'])
-
                         draw_text.text(
                             (700, 60),
                             (art),
@@ -197,17 +196,14 @@ def main():
                             if if_quantity:
                                 if quantity:
                                     list_png.append(path + '/' + str(count) + '1.jpg')
-
                             else:
                                 list_png.append(path + '/' + str(count) + '1.jpg')
-
         pdf1_filename = path_o + '/' + f"{name_output_catalog}.pdf"
         im_list_obj = []
         for i in list_png:
             im_list_obj.append(Image.open(i))
         imk = im_list_obj.pop(0)
         imk.save(pdf1_filename, "PDF", quality=proc, save_all=True, append_images=im_list_obj)
-
         path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'folder')
         shutil.rmtree(path)
 
