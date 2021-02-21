@@ -207,6 +207,6 @@ def main():
         path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'folder')
         shutil.rmtree(path)
 
+if __name__ == "__main__":
 
-if __name__ == '__main__':
     main()
