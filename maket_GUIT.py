@@ -1,4 +1,3 @@
-
 from PIL import Image, ImageDraw, ImageFont
 import csv
 import os
@@ -51,11 +50,13 @@ def main(data):
     if_create_logo = create_bool('Отобразить', 'Не отображать', data['if_create_logo'])
 
     list_png = []
-    path_o = os.getcwd()
+    path_o = data['filename']
+    font_path = path_o + '/' + 'Roboto-Light.ttf'
     file_csv = path_o + '/' + 'for_pdf.csv'
     if not os.path.exists('folder'):
         os.makedirs('folder')
     path = os.path.abspath('folder')
+    path_folder = path
 
     with open(file_csv, encoding='utf-8') as f:
         fieldnames = ['Tilda UID', 'Brand', 'SKU', 'Mark', 'Category', 'Title', 'Description', 'Text', 'Photo',
@@ -114,13 +115,13 @@ def main(data):
                     else:
                         quantity = 0
                         if row['Price']:
-                            price = int(row['Price'].split(".")[0])
+                            price = float(round((float(row['Price'])), 2))
                         if row["Quantity"]:
                             quantity = int(row["Quantity"])
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
                         draw_text = ImageDraw.Draw(im)
-                        font = ImageFont.truetype('Roboto-Light.ttf', size=30)
+                        font = ImageFont.truetype(font_path, size=30)
 
                         if (sale or new) and if_create_logo:
                             if sale:
@@ -131,7 +132,7 @@ def main(data):
                                 draw_text.ellipse((25, 25, 130, 130), fill="green", outline="green")
                                 draw_text.text((45, 62), 'NEW', font=font, fill='white')
 
-                        font = ImageFont.truetype('Roboto-Light.ttf', size=24)
+                        font = ImageFont.truetype(font_path, size=24)
                         if quantity:
                             draw_text.text(
                                 (700, 25),
@@ -161,8 +162,14 @@ def main(data):
                             if if_price:
                                 if valute:
                                     price = str((round((price + if_price_resize) * price_resize), 2)) + " " + valute
+                                    if '(' in price:
+                                        price = price.replace('(', '')
+                                        price = price.replace(')', '')
                                 elif not valute:
                                     price = str((round((price + if_price_resize) * price_resize), 2))
+                                    if '(' in price:
+                                        price = price.replace('(', '')
+                                        price = price.replace(')', '')
                                 draw_text.text(
                                     (700, 120),
                                     (price),
@@ -171,8 +178,14 @@ def main(data):
                         elif if_price:
                             if valute:
                                 price = str((round((price + if_price_resize) * price_resize), 2)) + " " + valute
+                                if '(' in price:
+                                    price = price.replace('(', '')
+                                    price = price.replace(')', '')
                             elif not valute:
                                 price = str((round((price + if_price_resize) * price_resize), 2))
+                                if '(' in price:
+                                    price = price.replace('(', '')
+                                    price = price.replace(')', '')
                             draw_text.text(
                                 (700, 90),
                                 (price),
@@ -209,40 +222,7 @@ def main(data):
             im_list_obj.append(Image.open(i))
         imk = im_list_obj.pop(0)
         imk.save(pdf1_filename, "PDF", quality=proc, save_all=True, append_images=im_list_obj)
-        print('----------')
-        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'folder')
-        print('========')
-        shutil.rmtree(path)
-        print('-=-=-=-=-=-=')
+        path_folder = os.path.join(path_folder)
+        shutil.rmtree(path_folder)
 
-
-
-
-
-#
-# def clicked():
-#
-#     data = {
-#         'season': season.get(),
-#         'view_price': view_price.get(),
-#         'quantity': quantity.get(),
-#         'if_material': if_material.get(),
-#         'if_characteristics': if_characteristics.get(),
-#         'if_create_logo': if_create_logo.get(),
-#         'if_price_resize': if_price_resize.get(),
-#         'price_resize': float(price_resize.get()),
-#         'valute': valute.get(),
-#         'descr_resize': descr_resize.get(),
-#         'proc': proc.get()
-#
-#         }
-#     # print(var.get())
-#     # print(var_r.get())
-#     # print(type(price_resize.get()))
-#     # print(float(price_resize.get())*4)
-#     # print(season.get())
-#     # print('------')
-#     # print(data)
-#     work(data)
-#     return None
 

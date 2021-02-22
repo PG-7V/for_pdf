@@ -1,29 +1,28 @@
 
 from tkinter import *
 from tkinter.ttk import Combobox, Spinbox
+from tkinter.filedialog import askdirectory
+
+
+def open_path_csv():
+    filename = askdirectory()
+    return filename
 
 def clicked():
-    print(var.get())
-    # print(var_r.get())
-    # print(type(price_resize.get()))
-    # print(float(price_resize.get())*4)
-    # print(season.get())
 
-    data = {
+    data = {'filename': open_path_csv(),
             'season': season.get(),
             'view_price': view_price.get(),
             'quantity': quantity.get(),
             'if_material': if_material.get(),
             'if_characteristics': if_characteristics.get(),
             'if_create_logo': if_create_logo.get(),
-            'if_price_resize': int(if_price_resize.get()),
+            'if_price_resize': float(if_price_resize.get()),
             'price_resize': float(price_resize.get()),
             'valute': valute.get(),
             'descr_resize': int(descr_resize.get()),
             'proc': int(proc.get())
-
             }
-    print(data)
 
     import maket_GUIT
     maket_GUIT.main(data)
@@ -36,7 +35,7 @@ window.geometry('400x570')
 # Категория
 season_text = Label(window, text='Категория')
 season = Combobox(window)
-season['value'] = ("Все платья", "Весна", "Лето", "Осень", "Зима")
+season['value'] = ("Все платья", "Весна 2021", "Лето 2021", "Осень 2021", "Зима 2021")
 season.current(0)
 season_text.grid(column=0, row=0, sticky=W, padx=10, pady=10)
 season.grid(column=1, row=0, sticky=W, padx=10, pady=10)
@@ -82,10 +81,9 @@ if_create_logo_text.grid(column=0, row=5, sticky=W, padx=10, pady=10)
 if_create_logo.grid(column=1, row=5, sticky=W, padx=10, pady=10)
 
 # Надбавка
-var_r = IntVar()
-var_r.set(0)
 if_price_resize_text = Label(window, text="Надбавка")
-if_price_resize = Spinbox(window, from_=0, to=100, width=5, textvariable=var_r)
+if_price_resize = Spinbox(window, from_=0, to=100, format="%10.2f", increment=0.01, width=7)
+if_price_resize.set('{:10.2f}'.format(0.00))
 if_price_resize_text.grid(column=0, row=6, sticky=W, padx=10, pady=10)
 if_price_resize.grid(column=1, row=6, sticky=W, padx=10, pady=10)
 
