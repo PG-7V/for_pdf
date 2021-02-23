@@ -1,5 +1,6 @@
 
 from tkinter import *
+from tkinter import messagebox
 from tkinter.ttk import Combobox, Spinbox
 from tkinter.filedialog import askdirectory
 
@@ -7,6 +8,11 @@ from tkinter.filedialog import askdirectory
 def open_path_csv():
     filename = askdirectory()
     return filename
+
+
+def on_closing():
+    if messagebox.askokcancel("Quit", "PDF is create."):
+        window.destroy()
 
 def clicked():
 
@@ -26,6 +32,7 @@ def clicked():
 
     import maket_GUIT
     maket_GUIT.main(data)
+    on_closing()
 
 
 window = Tk()
