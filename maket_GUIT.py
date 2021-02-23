@@ -53,6 +53,10 @@ def main(data):
     path_o = data['filename']
     font_path = path_o + '/' + 'Roboto-Light.ttf'
     file_csv = path_o + '/' + 'for_pdf.csv'
+    try:
+        shutil.rmtree(os.path.abspath('folder'))
+    except:
+        pass
     if not os.path.exists('folder'):
         os.makedirs('folder')
     path = os.path.abspath('folder')
