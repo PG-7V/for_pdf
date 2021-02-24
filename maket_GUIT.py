@@ -29,6 +29,7 @@ def main(data):
     proc = data['proc']
     name_output_catalog = 'catalog111'
     if_quantity = create_bool("Только в наличии", 'Все', data['quantity'])
+    if_create_brand = create_bool("Да", "Нет", data['if_create_brand'])
     if_material = create_bool('С тканью', 'Скрыть', data['if_material'])
     if data['season'] == 'Все платья':
         if_collection = False
@@ -68,6 +69,7 @@ def main(data):
                       'Characteristics:Состав', 'Weight', 'Length', 'Width', 'Height']
         reader = csv.DictReader(f, delimiter=";", fieldnames=fieldnames)
         sale = 0
+        brand = ''
         new = 0
         category = 0
         count = 0
@@ -80,6 +82,7 @@ def main(data):
                 new = 0
                 category = 0
                 character = ''
+                brand = ''
                 descr = row['Description']
                 if row["Category"].strip() in collection:
                     category = 1
@@ -91,6 +94,8 @@ def main(data):
                     character = row['Characteristics:Состав']
                     if ', ' in character:
                         character = character.replace(', ', '\n')
+                if if_create_brand:
+                    brand = row['Brand'].strip()
                 continue
 
             if not row['Description']:
@@ -99,7 +104,7 @@ def main(data):
                     if 'т' in row['SKU']:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
-                        im.save(path + '/' + str(count) + '1.jpg')
+                        im.save(path + '/' + str(count) + '1.jpg', quality=100)
                         if if_material:
                             if if_collection:
                                 if category:
@@ -125,18 +130,21 @@ def main(data):
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
                         draw_text = ImageDraw.Draw(im)
-                        font = ImageFont.truetype(font_path, size=30)
+                        font = ImageFont.truetype(font_path, size=18)
 
                         if (sale or new) and if_create_logo:
                             if sale:
-                                draw_text.ellipse((25, 25, 130, 130), fill="red", outline="red")
-                                draw_text.text((42, 62), 'SALE', font=font, fill='white')
+                                draw_text.ellipse((40, 70, 90, 120), fill="red", outline="red")
+                                draw_text.text((50, 84), 'sale', font=font, fill='white')
 
                             elif new:
-                                draw_text.ellipse((25, 25, 130, 130), fill="green", outline="green")
-                                draw_text.text((45, 62), 'NEW', font=font, fill='white')
+                                draw_text.ellipse((40, 70, 90, 120), fill="green", outline="green")
+                                draw_text.text((50, 84), 'new', font=font, fill='white')
 
-                        font = ImageFont.truetype(font_path, size=24)
+                        if if_create_brand and brand:
+                            draw_text.text((25, 25), f'Бренд: {brand}', font=ImageFont.truetype('Roboto-Light.ttf', size=26), fill='black')
+
+                        font = ImageFont.truetype(font_path, size=26)
                         if quantity:
                             draw_text.text(
                                 (700, 25),
@@ -144,6 +152,12 @@ def main(data):
                                 font=font,
                                 fill='#2a9926')
                             # quantity = 0
+                        else:
+                            draw_text.text(
+                                (700, 25),
+                                'Под заказ',
+                                font=font,
+                                fill='red')
                         if 'Артикул' in row['Title']:
                             art = ('Артикул: ' + row['SKU'])
                         else:
@@ -160,7 +174,7 @@ def main(data):
                                 descr = f"{descr1[0]} {int(descr2[0]) + int(descr_resize)}-{int(descr2[1]) + int(descr_resize)}"
                             draw_text.text(
                                 (700, 90),
-                                (descr),
+                                (descr.replace('Размеры', 'Размеры: ')),
                                 font=font,
                                 fill='#1C0606')
                             if if_price:
@@ -176,7 +190,7 @@ def main(data):
                                         price = price.replace(')', '')
                                 draw_text.text(
                                     (700, 120),
-                                    (price),
+                                    (f'Цена: {price}'),
                                     font=font,
                                     fill='#1C0606')
                         elif if_price:
@@ -192,7 +206,7 @@ def main(data):
                                     price = price.replace(')', '')
                             draw_text.text(
                                 (700, 90),
-                                (price),
+                                (f'Цена: {price}'),
                                 font=font,
                                 fill='#1C0606')
                         if if_characteristics:
@@ -206,7 +220,7 @@ def main(data):
                                 (character),
                                 font=font,
                                 fill='#1C0606')
-                        im.save(path + '/' + str(count) + '1.jpg')
+                        im.save(path + '/' + str(count) + '1.jpg', quality=100)
                         if if_collection:
                             if category:
                                 if if_quantity:
