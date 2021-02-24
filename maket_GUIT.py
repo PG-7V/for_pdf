@@ -30,25 +30,25 @@ def main(data):
     name_output_catalog = 'catalog111'
     if_quantity = create_bool("Только в наличии", 'Все', data['quantity'])
     if_create_brand = create_bool("Да", "Нет", data['if_create_brand'])
-    if_material = create_bool('С тканью', 'Скрыть', data['if_material'])
+    if_material = create_bool('Да', 'Нет', data['if_material'])
     if data['season'] == 'Все платья':
         if_collection = False
     else:
         if_collection = True
     if if_collection:
         collection = data['season']
-    if_characteristics = create_bool('Отобразить', 'Скрыть', data['if_characteristics'])
+    if_characteristics = create_bool('Да', 'Нет', data['if_characteristics'])
     if_descr = if_descr_resize = True
     descr_resize = data['descr_resize']
     if_price_resize = data['if_price_resize']
     price_resize = data['price_resize']
-    if_price = create_bool('Отобразить', 'Без цены', data['view_price'])
+    if_price = create_bool('Да', 'Нет', data['view_price'])
     if 'Нет' in data['valute']:
         valute = ''
     else:
         valute = data['valute']
 
-    if_create_logo = create_bool('Отобразить', 'Не отображать', data['if_create_logo'])
+    if_create_logo = create_bool('Да', 'Нет', data['if_create_logo'])
 
     list_png = []
     path_o = data['filename']
@@ -104,22 +104,22 @@ def main(data):
                     if 'т' in row['SKU']:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
-                        im.save(path + '/' + str(count) + '1.jpg', quality=100)
+                        im.save(path + '/' + str(count) + 'a1.jpg', quality=100)
                         if if_material:
                             if if_collection:
                                 if category:
                                     if if_quantity:
                                         if quantity:
-                                            list_png.append(path + '/' + str(count) + '1.jpg')
+                                            list_png.append(path + '/' + str(count) + 'a1.jpg')
                                     else:
-                                        list_png.append(path + '/' + str(count) + '1.jpg')
+                                        list_png.append(path + '/' + str(count) + 'a1.jpg')
                             else:
                                 if if_quantity:
                                     if quantity:
-                                        list_png.append(path + '/' + str(count) + '1.jpg')
+                                        list_png.append(path + '/' + str(count) + 'a1.jpg')
 
                                 else:
-                                    list_png.append(path + '/' + str(count) + '1.jpg')
+                                    list_png.append(path + '/' + str(count) + 'a1.jpg')
                         continue
                     else:
                         quantity = 0
@@ -179,12 +179,12 @@ def main(data):
                                 fill='#1C0606')
                             if if_price:
                                 if valute:
-                                    price = str((round((price + if_price_resize) * price_resize), 2)) + " " + valute
+                                    price = str(round(((price + if_price_resize) * price_resize), 2)) + " " + valute
                                     if '(' in price:
                                         price = price.replace('(', '')
                                         price = price.replace(')', '')
                                 elif not valute:
-                                    price = str((round((price + if_price_resize) * price_resize), 2))
+                                    price = str(round(((price + if_price_resize) * price_resize), 2))
                                     if '(' in price:
                                         price = price.replace('(', '')
                                         price = price.replace(')', '')
@@ -195,12 +195,12 @@ def main(data):
                                     fill='#1C0606')
                         elif if_price:
                             if valute:
-                                price = str((round((price + if_price_resize) * price_resize), 2)) + " " + valute
+                                price = str(round(((price + if_price_resize) * price_resize), 2)) + " " + valute
                                 if '(' in price:
                                     price = price.replace('(', '')
                                     price = price.replace(')', '')
                             elif not valute:
-                                price = str((round((price + if_price_resize) * price_resize), 2))
+                                price = str(round(((price + if_price_resize) * price_resize), 2))
                                 if '(' in price:
                                     price = price.replace('(', '')
                                     price = price.replace(')', '')
@@ -220,27 +220,28 @@ def main(data):
                                 (character),
                                 font=font,
                                 fill='#1C0606')
-                        im.save(path + '/' + str(count) + '1.jpg', quality=100)
+                        im.save(path + '/' + str(count) + 'a1.jpg', quality=100)
                         if if_collection:
                             if category:
                                 if if_quantity:
                                     if quantity:
-                                        list_png.append(path + '/' + str(count) + '1.jpg')
+                                        list_png.append(path + '/' + str(count) + 'a1.jpg')
                                 else:
-                                    list_png.append(path + '/' + str(count) + '1.jpg')
+                                    list_png.append(path + '/' + str(count) + 'a1.jpg')
                         else:
                             if if_quantity:
                                 if quantity:
-                                    list_png.append(path + '/' + str(count) + '1.jpg')
+                                    list_png.append(path + '/' + str(count) + 'a1.jpg')
                             else:
-                                list_png.append(path + '/' + str(count) + '1.jpg')
+                                list_png.append(path + '/' + str(count) + 'a1.jpg')
         pdf1_filename = path_o + '/' + f"{name_output_catalog}.pdf"
         im_list_obj = []
+        print(list_png)
         for i in list_png:
             im_list_obj.append(Image.open(i))
+        print(im_list_obj)
         imk = im_list_obj.pop(0)
+        print(im_list_obj)
         imk.save(pdf1_filename, "PDF", quality=proc, save_all=True, append_images=im_list_obj)
         path_folder = os.path.join(path_folder)
         shutil.rmtree(path_folder)
-
-
