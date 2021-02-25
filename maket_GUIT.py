@@ -70,6 +70,7 @@ def main(data):
         reader = csv.DictReader(f, delimiter=";", fieldnames=fieldnames)
         sale = 0
         brand = ''
+        comment_text = ''
         new = 0
         category = 0
         count = 0
@@ -83,6 +84,7 @@ def main(data):
                 category = 0
                 character = ''
                 brand = ''
+                comment_text = ''
                 descr = row['Description']
                 if row["Category"].strip() in collection:
                     category = 1
@@ -96,6 +98,8 @@ def main(data):
                         character = character.replace(', ', '\n')
                 if if_create_brand:
                     brand = row['Brand'].strip()
+                if row['Text']:
+                    comment_text = row['Text'].strip()
                 continue
 
             if not row['Description']:
@@ -153,36 +157,47 @@ def main(data):
 
                         if (sale or new) and if_create_logo:
                             if sale:
-                                draw_text.ellipse((40, 70, 90, 120), fill="red", outline="red")
-                                draw_text.text((50, 84), 'sale', font=font, fill='white')
+                                draw_text.ellipse((40, 80, 90, 130), fill="red", outline="red")
+                                draw_text.text((50, 93), 'sale', font=font, fill='white')
 
                             elif new:
-                                draw_text.ellipse((40, 70, 90, 120), fill="green", outline="green")
-                                draw_text.text((50, 84), 'new', font=font, fill='white')
+                                draw_text.ellipse((40, 80, 90, 130), fill="green", outline="green")
+                                draw_text.text((50, 93), 'new', font=font, fill='white')
 
                         if if_create_brand and brand:
-                            draw_text.text((25, 25), f'Бренд: {brand}', font=ImageFont.truetype('Roboto-Light.ttf', size=26), fill='black')
+                            draw_text.text((30, 30), f'Бренд: {brand}',
+                                           font=ImageFont.truetype('Roboto-Light.ttf', size=28), fill='black')
 
-                        font = ImageFont.truetype(font_path, size=26)
+                        if comment_text:
+                            iter = len(comment_text) // 26
+                            if iter > 0:
+                                comment_text = list(comment_text)
+                                for i in range(1, iter + 1):
+                                    comment_text.insert((i * 26) + i, '\n')
+                                comment_text = ''.join(comment_text)
+                            draw_text.text((550, 1050), f'{comment_text}',
+                                           font=ImageFont.truetype('Roboto-Light.ttf', size=24), fill='black')
+
+                        font = ImageFont.truetype(font_path, size=28)
                         if quantity:
                             draw_text.text(
-                                (700, 25),
+                                (680, 30),
                                 'В наличии',
                                 font=font,
                                 fill='#2a9926')
                             # quantity = 0
                         else:
                             draw_text.text(
-                                (700, 25),
+                                (680, 30),
                                 'Под заказ',
                                 font=font,
                                 fill='red')
                         if 'Артикул' in row['Title']:
-                            art = row['SKU'].replace('Артикул', 'Артикул:')
+                            art = 'Артикул: ' + row['SKU']
                         else:
                             art = row['SKU']
                         draw_text.text(
-                            (700, 60),
+                            (680, 65),
                             (art),
                             font=font,
                             fill='#1C0606')
@@ -192,50 +207,50 @@ def main(data):
                                 descr2 = descr1[1].split("-")
                                 descr = f"{descr1[0]} {int(descr2[0]) + int(descr_resize)}-{int(descr2[1]) + int(descr_resize)}"
                             draw_text.text(
-                                (700, 90),
+                                (680, 100),
                                 (descr.replace('Размеры', 'Размеры: ')),
                                 font=font,
                                 fill='#1C0606')
                             if if_price:
                                 if valute:
-                                    price = str(round(((price + if_price_resize) * price_resize), 2)) + " " + valute
+                                    price = str(round((price + if_price_resize) * price_resize)) + " " + valute
                                     if '(' in price:
                                         price = price.replace('(', '')
                                         price = price.replace(')', '')
                                 elif not valute:
-                                    price = str(round(((price + if_price_resize) * price_resize), 2))
+                                    price = str(round((price + if_price_resize) * price_resize))
                                     if '(' in price:
                                         price = price.replace('(', '')
                                         price = price.replace(')', '')
                                 draw_text.text(
-                                    (700, 120),
+                                    (680, 135),
                                     (f'Цена: {price}'),
                                     font=font,
                                     fill='#1C0606')
                         elif if_price:
                             if valute:
-                                price = str(round(((price + if_price_resize) * price_resize), 2)) + " " + valute
+                                price = str(round((price + if_price_resize) * price_resize)) + " " + valute
                                 if '(' in price:
                                     price = price.replace('(', '')
                                     price = price.replace(')', '')
                             elif not valute:
-                                price = str(round(((price + if_price_resize) * price_resize), 2))
+                                price = str(round((price + if_price_resize) * price_resize))
                                 if '(' in price:
                                     price = price.replace('(', '')
                                     price = price.replace(')', '')
                             draw_text.text(
-                                (700, 90),
+                                (680, 135),
                                 (f'Цена: {price}'),
                                 font=font,
                                 fill='#1C0606')
                         if if_characteristics:
                             draw_text.text(
-                                (700, 900),
+                                (680, 905),
                                 'Состав:',
                                 font=font,
                                 fill='#2a9926')
                             draw_text.text(
-                                (700, 925),
+                                (680, 940),
                                 (character),
                                 font=font,
                                 fill='#1C0606')
