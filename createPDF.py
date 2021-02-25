@@ -37,7 +37,7 @@ def clicked():
 
 
 window = Tk()
-window.title("Create PDF version 1.0.7")
+window.title("Create PDF version 1.0.8")
 window.geometry('400x600')
 
 # Категория

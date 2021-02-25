@@ -75,6 +75,7 @@ def main(data):
         category = 0
         count = 0
         character = ''
+        descr_count = 0
         descr = ''
         for row in reader:
             count += 1
@@ -83,6 +84,7 @@ def main(data):
                 new = 0
                 category = 0
                 character = ''
+                descr_count = 0
                 brand = ''
                 comment_text = ''
                 descr = row['Description']
@@ -203,9 +205,13 @@ def main(data):
                             fill='#1C0606')
                         if if_descr:
                             if if_descr_resize:
-                                descr1 = descr.split(" ")
-                                descr2 = descr1[1].split("-")
-                                descr = f"{descr1[0]} {int(descr2[0]) + int(descr_resize)}-{int(descr2[1]) + int(descr_resize)}"
+                                if not descr_count:
+                                    descr1 = descr.split(" ")
+                                    descr2 = descr1[1].split("-")
+                                    descr = f"{descr1[0]} {int(descr2[0]) + int(descr_resize)}-{int(descr2[1]) + int(descr_resize)}"
+                                    descr_count = 1
+                                elif descr_count:
+                                    descr=descr
                             draw_text.text(
                                 (670, 100),
                                 (descr.replace('Размеры', 'Размеры:')),
