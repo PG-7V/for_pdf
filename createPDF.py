@@ -37,7 +37,7 @@ def clicked():
 
 
 window = Tk()
-window.title("Create PDF")
+window.title("Create PDF version 1.0.7")
 window.geometry('400x600')
 
 # Категория
@@ -113,7 +113,7 @@ price_resize.grid(column=1, row=8, sticky=W, padx=10, pady=10)
 # Отображение Валюты
 if_price = Label(window, text='Отобразить валюту')
 valute = Combobox(window)
-valute['value'] = ('Нет', 'BY', '₽', '€', '$')
+valute['value'] = ('Нет', 'BYN', '₽', '€', '$')
 valute.current(0)
 if_price.grid(column=0, row=9, sticky=W, padx=10, pady=10)
 valute.grid(column=1, row=9, sticky=W, padx=10, pady=10)

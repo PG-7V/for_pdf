@@ -8,37 +8,35 @@ import os
 import requests
 import shutil
 
-
-# url = 'https://static.tildacdn.com/tild6466-6462-4530-a137-343933333736/1661_0.jpg'
+# def on_closing():
+#     if messagebox.askokcancel("Quit", "PDF is create."):
+#         window.destroy()
+#         exit()
 #
-# r = requests.get(url, stream=True)
-# with open('test_img.jpg', 'wb') as fo:
-#     for chunk in r.iter_content(8192):
-#         fo.write(chunk)
-
-# img = Image.open('test_img.jpg')
-# # img.save('save_test_img.jpg', quality=99)
-# # draw_text = ImageDraw.Draw(img)
-# # font = ImageFont.truetype('Roboto-Light.ttf', size=18)
-# #
-# # # draw_text.ellipse()
-# # draw_text.ellipse((40, 70, 90, 120), fill="red", outline="red")
-# # draw_text.text((50, 84), 'sale', font=font, fill='white')
-# # draw_text.text((25, 25), 'Под заказ', font=ImageFont.truetype('Roboto-Light.ttf', size=24), fill='red')
-# img.save('save_test_img2.jpg', quality=100)
-# # contrast = ImageEnhance.Contrast(img)
-# # contrast.enhance(1.2).show()
+# def cli():
+#     print(22222)
+#     on_closing()
 #
-# img.show()
+# window = Tk()
+# window.title("Create PDF")
+# window.geometry('400x600')
+#
+# btn = Button(window, text="Запустить", command=cli)
+# btn.grid(column=1, row=3, padx=10, pady=10)
+#
+#
+# window.mainloop()
+text = "рпп т  о о о о о оо о о о о о о . о р р, т рр  \ т п пм п п п "
 
-price = 25.0
-if_price_resize = 2.22
-price_resize = 3.333
+im = Image.open('test_img.jpg')
 
-price = str(round(((price + if_price_resize) * price_resize), 2))
-# price = price + if_price_resize
-# price = price * price_resize
-# price = round(price, 2)
-# price = str(price)
+draw_text = ImageDraw.Draw(im)
+print(len(text))
 
-print(price)
+draw_text.text((int(700 - len(text)*8.5), 25), f'{text}',
+               font=ImageFont.truetype('Roboto-Light.ttf', size=28), fill='black')
+
+draw_text.text((650, 70), f'{text}',
+               font=ImageFont.truetype('Roboto-Light.ttf', size=28), fill='black')
+
+im.show()

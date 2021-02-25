@@ -101,6 +101,25 @@ def main(data):
             if not row['Description']:
 
                 if row['SKU']:
+                    if 'д' in row['SKU']:
+                        save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
+                        im = Image.open(path + '/' + str(count) + '.jpg')
+                        im.save(path + '/' + str(count) + 'a1.jpg', quality=100)
+                        if if_collection:
+                            if category:
+                                if if_quantity:
+                                    if quantity:
+                                        list_png.append(path + '/' + str(count) + 'a1.jpg')
+                                else:
+                                    list_png.append(path + '/' + str(count) + 'a1.jpg')
+                        else:
+                            if if_quantity:
+                                if quantity:
+                                    list_png.append(path + '/' + str(count) + 'a1.jpg')
+
+                            else:
+                                list_png.append(path + '/' + str(count) + 'a1.jpg')
+                        continue
                     if 'т' in row['SKU']:
                         save_image(path + '/' + str(count) + '.jpg', get_file(row['Photo']))
                         im = Image.open(path + '/' + str(count) + '.jpg')
@@ -159,9 +178,9 @@ def main(data):
                                 font=font,
                                 fill='red')
                         if 'Артикул' in row['Title']:
-                            art = ('Артикул: ' + row['SKU'])
+                            art = row['SKU'].replace('Артикул', 'Артикул:')
                         else:
-                            art = (row['SKU'])
+                            art = row['SKU']
                         draw_text.text(
                             (700, 60),
                             (art),
@@ -236,12 +255,9 @@ def main(data):
                                 list_png.append(path + '/' + str(count) + 'a1.jpg')
         pdf1_filename = path_o + '/' + f"{name_output_catalog}.pdf"
         im_list_obj = []
-        print(list_png)
         for i in list_png:
             im_list_obj.append(Image.open(i))
-        print(im_list_obj)
         imk = im_list_obj.pop(0)
-        print(im_list_obj)
         imk.save(pdf1_filename, "PDF", quality=proc, save_all=True, append_images=im_list_obj)
         path_folder = os.path.join(path_folder)
         shutil.rmtree(path_folder)
