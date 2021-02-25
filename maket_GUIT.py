@@ -169,11 +169,11 @@ def main(data):
                                            font=ImageFont.truetype('Roboto-Light.ttf', size=28), fill='black')
 
                         if comment_text:
-                            iter = len(comment_text) // 26
+                            iter = len(comment_text) // 24
                             if iter > 0:
                                 comment_text = list(comment_text)
                                 for i in range(1, iter + 1):
-                                    comment_text.insert((i * 26) + i, '\n')
+                                    comment_text.insert((i * 24) + i, '\n')
                                 comment_text = ''.join(comment_text)
                             draw_text.text((550, 1050), f'{comment_text}',
                                            font=ImageFont.truetype('Roboto-Light.ttf', size=24), fill='black')
@@ -181,14 +181,14 @@ def main(data):
                         font = ImageFont.truetype(font_path, size=28)
                         if quantity:
                             draw_text.text(
-                                (680, 30),
+                                (670, 30),
                                 'В наличии',
                                 font=font,
                                 fill='#2a9926')
                             # quantity = 0
                         else:
                             draw_text.text(
-                                (680, 30),
+                                (670, 30),
                                 'Под заказ',
                                 font=font,
                                 fill='red')
@@ -197,7 +197,7 @@ def main(data):
                         else:
                             art = row['SKU']
                         draw_text.text(
-                            (680, 65),
+                            (670, 65),
                             (art),
                             font=font,
                             fill='#1C0606')
@@ -207,8 +207,8 @@ def main(data):
                                 descr2 = descr1[1].split("-")
                                 descr = f"{descr1[0]} {int(descr2[0]) + int(descr_resize)}-{int(descr2[1]) + int(descr_resize)}"
                             draw_text.text(
-                                (680, 100),
-                                (descr.replace('Размеры', 'Размеры: ')),
+                                (670, 100),
+                                (descr.replace('Размеры', 'Размеры:')),
                                 font=font,
                                 fill='#1C0606')
                             if if_price:
@@ -223,7 +223,7 @@ def main(data):
                                         price = price.replace('(', '')
                                         price = price.replace(')', '')
                                 draw_text.text(
-                                    (680, 135),
+                                    (670, 135),
                                     (f'Цена: {price}'),
                                     font=font,
                                     fill='#1C0606')
@@ -239,18 +239,18 @@ def main(data):
                                     price = price.replace('(', '')
                                     price = price.replace(')', '')
                             draw_text.text(
-                                (680, 135),
+                                (670, 135),
                                 (f'Цена: {price}'),
                                 font=font,
                                 fill='#1C0606')
                         if if_characteristics:
                             draw_text.text(
-                                (680, 905),
+                                (670, 905),
                                 'Состав:',
                                 font=font,
                                 fill='#2a9926')
                             draw_text.text(
-                                (680, 940),
+                                (670, 940),
                                 (character),
                                 font=font,
                                 fill='#1C0606')
